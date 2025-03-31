@@ -1,0 +1,24 @@
+[project]
+name = "sudoku"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "mypy>=1.15.0",
+    "ruff>=0.11.0",
+]
+
+[tool.mypy]
+strict = true
+files = ["main.py"]
+
+[[tool.mypy.overrides]]
+module = "htinter"
+ignore_errors = true
+
+[tool.ruff.format]
+quote-style = "single"
