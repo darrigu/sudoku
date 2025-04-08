@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sudoku</title>
+
+    <style>
+      @import "reset.css";
+      
+      /* https://catppuccin.com/palette/ */
+      :root {
+        --peach: #fab387;
+        --text: #cdd6f4;
+        --overlay1: #7f849c;
+        --surface1: #45475a;
+        --surface0: #313244;
+        --base: #1e1e2e;
+        --mantle: #181825;
+      }
+
+      body {
+        background: var(--base);
+        color: var(--text);
+        font-family: sans-serif;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        align-items: center;
+        justify-content: center;
+        gap: 1em;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: xx-large;
+        text-decoration: underline var(--peach);
+      }
+
+      #grid {
+        border-collapse: collapse;
+        --size: min(70vw, 70vh);
+        height: var(--size);
+        width: var(--size);
+      }
+
+      #grid colgroup,
+      #grid tbody {
+        border: solid medium var(--surface1);
+      }
+
+      .cell {
+        padding: 10px;
+        background: var(--surface0);
+        color: white;
+        transition: 200ms;
+        font-size: larger;
+        user-select: none;
+        cursor: pointer;
+        border: solid thin var(--surface1);
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      .cell:hover,
+      .cell.active {
+        background: var(--surface1);
+      }
+
+      .cell.disabled {
+        pointer-events: none;
+        background: var(--mantle);
+      }
+
+      .validate {
+        background: var(--peach);
+        color: var(--base);
+        border-radius: 10px;
+        border: none;
+        padding: 1em;
+        transition: 200ms;
+        cursor: pointer;
+      }
+
+      .validate:hover {
+        filter: brightness(0.9);
+      }
+
+      .validate.disabled {
+        background: var(--mantle);
+        color: var(--subtext1);
+        pointer-events: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Sudoku</h1>
+    <table id="grid"></table>
+    <button class="validate disabled">Validate</button>
+  </body>
+</html>

@@ -1,14 +1,10 @@
+import copy
 import random
-from typing import Optional
+from typing import Any, Optional
 
 import htinter as ht
 
 type Grid = list[list[int]]
-
-
-def print_grid(grid: Grid) -> None:
-    for row in grid:
-        print(' '.join(str(num) if num != 0 else '.' for num in row))
 
 
 def is_valid(grid: Grid, row: int, col: int, num: int) -> bool:
@@ -84,17 +80,107 @@ def generate_sudoku() -> Grid:
     return grid
 
 
-def main() -> None:
-    sudoku_grid = generate_sudoku()
-    print('Generated Sudoku Puzzle:')
-    print_grid(sudoku_grid)
+def is_valid_row(grid: Grid, row: int) -> bool:
+    seen = set()
+    for num in grid[row]:
+        if num != 0:
+            if num in seen:
+                return False
+            seen.add(num)
+    return True
 
-    if solve_sudoku(sudoku_grid):
-        print('\nSolved Sudoku Puzzle:')
-        print_grid(sudoku_grid)
-    else:
-        print('No solution exists.')
+
+def is_valid_col(grid: Grid, col: int) -> bool:
+    seen = set()
+    for row in range(9):
+        num = grid[row][col]
+        if num != 0:
+            if num in seen:
+                return False
+            seen.add(num)
+    return True
+
+
+def is_valid_subgrid(grid: Grid, start_row: int, start_col: int) -> bool:
+    seen = set()
+    for row in range(start_row, start_row + 3):
+        for col in range(start_col, start_col + 3):
+            num = grid[row][col]
+            if num != 0:
+                if num in seen:
+                    return False
+                seen.add(num)
+    return True
+
+
+def generate_grid_dom(grid: Grid) -> None:
+    html = ''
+    html += f'<colgroup>{"<col>" * (len(grid) // 3)}</colgroup>' * (len(grid) // 3)
+    for y, row in enumerate(grid):
+        if y % 3 == 0:
+            html += '<tbody>'
+        html += '<tr>'
+        for x, num in enumerate(row):
+            html += (
+                f'<td class="cell{" disabled" if num != 0 else ""}" y="{y}" x="{x}">'
+            )
+            html += str(num) if num != 0 else ''
+    ht.contenu('#grid', html)
+
+
+sudoku_grid: Grid
+solved_grid: Grid
+clicked_cell: Optional[dict[str, str]] = None
+
+
+def cell_click(c: Any, p: Any) -> None:
+    global clicked_cell
+    if clicked_cell:
+        ht.classes(f'.cell[x="{clicked_cell["x"]}"][y="{clicked_cell["y"]}"]', 'cell')
+    clicked_cell = p
+    ht.classes(f'.cell[x="{p["x"]}"][y="{p["y"]}"]', 'cell active')
+
+
+def change_cell_value(c: Any, p: Any) -> None:
+    global sudoku_grid, clicked_cell
+    if clicked_cell:
+        x = int(clicked_cell['x'])
+        y = int(clicked_cell['y'])
+        cell = f'.cell[x="{x}"][y="{y}"]'
+        if p['touche'].isdigit():
+            sudoku_grid[y][x] = int(p['touche'])
+            ht.contenu(cell, p['touche'])
+            ht.classes(cell, 'cell')
+            clicked_cell = None
+            if not find_empty_location(sudoku_grid):
+                ht.classes('.validate', 'validate')
+        elif p['touche'] == 'Escape':
+            ht.classes(cell, 'cell')
+            clicked_cell = None
+        elif p['touche'] == 'Backspace':
+            sudoku_grid[y][x] = 0
+            ht.contenu(cell, '')
+            ht.classes(cell, 'cell')
+            clicked_cell = None
+
+
+def validate_click(c: Any, p: Any) -> None:
+    print(sudoku_grid == solved_grid)
+
+
+def main(c: Any, p: Any) -> None:
+    global sudoku_grid, solved_grid
+    sudoku_grid = generate_sudoku()
+    while True:
+        solved_grid = copy.deepcopy(sudoku_grid)
+        if solve_sudoku(solved_grid):
+            break
+    generate_grid_dom(sudoku_grid)
+    ht.capture_clic('.cell', fnct=cell_click)
+    ht.écouter_touches(fnct=change_cell_value)
+    ht.capture_clic('.validate', fnct=validate_click)
 
 
 if __name__ == '__main__':
-    main()
+    ht.init_page(main)
+    ht.servir()
