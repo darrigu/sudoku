@@ -30,14 +30,24 @@
         gap: 1em;
       }
 
+      header {
+        display: flex;
+        gap: 1em;
+      }
+
       h1 {
         text-align: center;
         font-size: xx-large;
         text-decoration: underline var(--peach);
       }
 
+      #difficulty {
+        background: var(--base);
+        border: none;
+        color: var(--peach);
+      }
+
       #grid {
-        border-collapse: collapse;
         --size: min(70vw, 70vh);
         height: var(--size);
         width: var(--size);
@@ -49,7 +59,6 @@
       }
 
       .cell {
-        padding: 10px;
         background: var(--surface0);
         color: white;
         transition: 200ms;
@@ -94,8 +103,14 @@
   </head>
 
   <body>
-    <h1>Sudoku</h1>
+    <header>
+      <h1>Sudoku</h1>
+      <select name="difficulty" id="difficulty">
+        <option value="beginner">Débutant</option>
+        <option value="advanced">Avancé</option>
+      </select>
+    </header>
     <table id="grid"></table>
-    <button class="validate disabled">Validate</button>
+    <button class="validate disabled">Valider</button>
   </body>
 </html>
