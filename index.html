@@ -27,17 +27,17 @@
         height: 100vh;
         align-items: center;
         justify-content: center;
-        gap: 1em;
+        gap: 1rem;
       }
 
       header {
         display: flex;
-        gap: 1em;
+        gap: 1rem;
       }
 
       h1 {
         text-align: center;
-        font-size: xx-large;
+        font-size: 3em;
         text-decoration: underline var(--peach);
       }
 
@@ -45,6 +45,13 @@
         background: var(--base);
         border: none;
         color: var(--peach);
+        cursor: pointer;
+        appearance: base-select;
+      }
+
+      #difficulty::picker(select) {
+        appearance: base-select;
+        background: red;
       }
 
       #grid {
@@ -62,7 +69,7 @@
         background: var(--surface0);
         color: white;
         transition: 200ms;
-        font-size: larger;
+        font-size: 1.5rem;
         user-select: none;
         cursor: pointer;
         border: solid thin var(--surface1);
@@ -85,7 +92,7 @@
         color: var(--base);
         border-radius: 10px;
         border: none;
-        padding: 1em;
+        padding: .75rem;
         transition: 200ms;
         cursor: pointer;
       }

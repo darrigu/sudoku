@@ -91,7 +91,7 @@ function commande_api(api, commande) {
             document.querySelectorAll(obj).forEach(el => el.classList = rep["classes"][obj]);
         if ("valeurs" in rep)
           for (let obj in rep["valeurs"])
-            for (let el of document.querySelectorAll(obj)) el.value = rep["valeurs"][obj];
+            document.querySelectorAll(obj).forEach(el => el.value = rep["valeurs"][obj]);
         if ("créer_batt" in rep)
           for (let ref in rep["créer_batt"])
             window["__tictacs"][ref] = window.setInterval(() => commande_api("/__tictac", "ref=" + ref), parseInt(rep["créer_batt"][ref]));
