@@ -130,20 +130,16 @@ def generate_grid_dom(grid: Grid) -> None:
 sudoku_grid: Grid
 solved_grid: Grid
 clicked_cell: Optional[dict[str, str]] = None
+difficulty: str = 'beginner'
 
 
-def cell_click(c: Any, p: Any) -> None:
-    global clicked_cell
-    if clicked_cell:
-        prev_selector = f'.cell[x="{clicked_cell["x"]}"][y="{clicked_cell["y"]}"]'
-        ht.classes(prev_selector, 'cell')
-    clicked_cell = p
-    new_selector = f'.cell[x="{p["x"]}"][y="{p["y"]}"]'
-    ht.classes(new_selector, 'cell active')
-
-
-def change_cell_value(c: Any, p: Any) -> None:
+def keyboard_event(c: Any, p: Any) -> None:
     global sudoku_grid, clicked_cell
+
+    if p['touche'] == 'Enter':
+        validate_click(None, None)
+        return
+
     if not clicked_cell:
         return
     x, y = int(clicked_cell['x']), int(clicked_cell['y'])
@@ -163,8 +159,37 @@ def change_cell_value(c: Any, p: Any) -> None:
         ht.classes('.validate', 'validate')
 
 
+def cell_click(c: Any, p: Any) -> None:
+    global clicked_cell
+    if clicked_cell:
+        prev_selector = f'.cell[x="{clicked_cell["x"]}"][y="{clicked_cell["y"]}"]'
+        ht.classes(prev_selector, 'cell')
+    clicked_cell = p
+    new_selector = f'.cell[x="{p["x"]}"][y="{p["y"]}"]'
+    ht.classes(new_selector, 'cell active')
+
+
 def validate_click(c: Any, p: Any) -> None:
-    print(sudoku_grid == solved_grid)
+    if difficulty == 'beginner':
+        for i in range(9):
+            for j in range(9):
+                cell_sel = f'.cell[x="{j}"][y="{i}"]:not(.disabled)'
+                if sudoku_grid[i][j] != 0:
+                    if sudoku_grid[i][j] == solved_grid[i][j]:
+                        ht.classes(cell_sel, 'cell valid')
+                    else:
+                        ht.classes(cell_sel, 'cell invalid')
+
+
+def difficulty_click(c: Any, p: Any) -> None:
+    global difficulty
+    if p['class'].split()[1] == 'beginner':
+        difficulty = 'advanced'
+        ht.classes('.validate', 'validate disabled')
+    else:
+        difficulty = 'beginner'
+        ht.classes('.validate', 'validate')
+    ht.classes('.difficulty', 'difficulty ' + difficulty)
 
 
 def main(c: Any, p: Any) -> None:
@@ -176,12 +201,13 @@ def main(c: Any, p: Any) -> None:
         if solve_sudoku(solved_grid):
             break
 
-    print(solved_grid)
-
     generate_grid_dom(sudoku_grid)
+
+    ht.écouter_touches(fnct=keyboard_event)
+
     ht.capture_clic('.cell', fnct=cell_click)
-    ht.écouter_touches(fnct=change_cell_value)
     ht.capture_clic('.validate', fnct=validate_click)
+    ht.capture_clic('.difficulty', fnct=difficulty_click)
 
 
 if __name__ == '__main__':

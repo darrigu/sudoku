@@ -9,7 +9,9 @@
       
       /* https://catppuccin.com/palette/ */
       :root {
+        --red: #f38ba8;
         --peach: #fab387;
+        --green: #a6e3a1;
         --text: #cdd6f4;
         --overlay1: #7f849c;
         --surface1: #45475a;
@@ -32,6 +34,7 @@
 
       header {
         display: flex;
+        align-items: center;
         gap: 1rem;
       }
 
@@ -41,17 +44,23 @@
         text-decoration: underline var(--peach);
       }
 
-      #difficulty {
+      .difficulty {
         background: var(--base);
         border: none;
         color: var(--peach);
         cursor: pointer;
-        appearance: base-select;
       }
 
-      #difficulty::picker(select) {
-        appearance: base-select;
-        background: red;
+      .difficulty:hover {
+        filter: brightness(0.9);
+      }
+
+      .difficulty.beginner::before {
+        content: "Débutant";
+      }
+
+      .difficulty.advanced::before {
+        content: "Avancé";
       }
 
       #grid {
@@ -87,6 +96,14 @@
         background: var(--mantle);
       }
 
+      .cell.valid {
+        background: color-mix(in srgb, var(--green) 75%, transparent);
+      }
+
+      .cell.invalid {
+        background: color-mix(in srgb, var(--red) 50%, transparent);
+      }
+
       .validate {
         background: var(--peach);
         color: var(--base);
@@ -112,12 +129,9 @@
   <body>
     <header>
       <h1>Sudoku</h1>
-      <select name="difficulty" id="difficulty">
-        <option value="beginner">Débutant</option>
-        <option value="advanced">Avancé</option>
-      </select>
+      <button class="difficulty beginner" title="Cliquez pour changer la difficulté"></button>
     </header>
     <table id="grid"></table>
-    <button class="validate disabled">Valider</button>
+    <button class="validate">Valider</button>
   </body>
 </html>
