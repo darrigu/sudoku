@@ -6,18 +6,34 @@
 
     <style>
       @import "reset.css";
-      
+
       /* https://catppuccin.com/palette/ */
-      :root {
-        --red: #f38ba8;
-        --peach: #fab387;
-        --green: #a6e3a1;
-        --text: #cdd6f4;
-        --overlay1: #7f849c;
-        --surface1: #45475a;
-        --surface0: #313244;
-        --base: #1e1e2e;
-        --mantle: #181825;
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --red: #f38ba8;
+          --peach: #fab387;
+          --green: #a6e3a1;
+          --text: #cdd6f4;
+          --overlay1: #7f849c;
+          --surface1: #45475a;
+          --surface0: #313244;
+          --base: #1e1e2e;
+          --mantle: #181825;
+        }
+      }
+
+      @media (prefers-color-scheme: light) {
+        :root {
+          --red: #d20f39;
+          --peach: #fe640b;
+          --green: #40a02b;
+          --text: #4c4f69;
+          --overlay1: #8c8fa1;
+          --surface1: #bcc0cc;
+          --surface0: #ccd0da;
+          --base: #eff1f5;
+          --mantle: #e6e9ef;
+        }
       }
 
       body {
@@ -40,7 +56,7 @@
 
       h1 {
         text-align: center;
-        font-size: 3em;
+        font-size: 3rem;
         text-decoration: underline var(--peach);
       }
 
@@ -49,10 +65,11 @@
         border: none;
         color: var(--peach);
         cursor: pointer;
+        font-size: 1rem;
       }
 
       .difficulty:hover {
-        filter: brightness(0.9);
+        color: color-mix(in srgb, var(--peach), rgba(0, 0, 0, 1) 10%);
       }
 
       .difficulty.beginner::before {
@@ -76,7 +93,6 @@
 
       .cell {
         background: var(--surface0);
-        color: white;
         transition: 200ms;
         font-size: 1.5rem;
         user-select: none;
@@ -112,6 +128,7 @@
         padding: .75rem;
         transition: 200ms;
         cursor: pointer;
+        font-size: 1rem;
       }
 
       .validate:hover {
